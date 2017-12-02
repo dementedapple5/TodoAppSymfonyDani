@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
+
+<h2 class="page-header">Tareas de Daniel</h2>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -12,15 +14,14 @@
   </thead>
 
   <tbody>
-    {%for todo in todos %}
+    {% for todo in todos %}
     <tr>
       <th scope="row">{{todo.id}}</th>
       <td>{{todo.title}}</td>
       <td>{{todo.createDate|date('d/m/Y H:i:s')}}</td>
       <td>{{todo.date|date('d/m/Y H:i:s')}}</td>
       <td>
-        <a href="/todo/details/{{todo.id}}" class="btn btn-primary">Ver</a>
-        <a href="/todo/edit/{{todo.id}}" class="btn btn-success">Editar</a>
+        <a href="/todo/edit/{{todo.id}}" class="btn btn-secondary">Editar</a>
         <a href="/todo/delete/{{todo.id}}" class="btn btn-danger">Eliminar</a>
       </td>
     </tr>

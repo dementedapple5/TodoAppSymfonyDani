@@ -1,10 +1,9 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-  <a class="btn btn-default" href="/todos">Volver</a>
-  <hr>
   <h2 class="page-header">Editar Tarea</h2>
 
   {{form_start(form)}}
   {{form_widget(form)}}
   {{form_start(form)}}
+  <a class="btn btn-secondary" href="/todos">Volver</a>
 {% endblock %}
