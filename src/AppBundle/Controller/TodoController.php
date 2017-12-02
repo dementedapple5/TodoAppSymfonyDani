@@ -35,11 +35,11 @@ class TodoController extends Controller
     {
         $todo = new Todo;
         $form = $this->createFormBuilder($todo)
-          ->add('title', TextType::class, array('attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
-          ->add('category', TextType::class, array('attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
-          ->add('description', TextareaType::class, array('attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
-          ->add('priority', ChoiceType::class, array('choices'=>array('Baja'=>'Baja','Media'=>'Media','Alta'=>'Alta'),'attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
-          ->add('date', DateTimeType::class, array('attr' => array('style' => 'margin-bottom:15px')))
+          ->add('title', TextType::class, array('label'=> 'Titulo','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+          ->add('category', TextType::class, array('label'=> 'Categoria','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+          ->add('description', TextareaType::class, array('label'=> 'Descripcion','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+          ->add('priority', ChoiceType::class, array('label'=> 'Prioridad','choices'=>array('Baja'=>'Baja','Media'=>'Media','Alta'=>'Alta'),'attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+          ->add('date', DateTimeType::class, array('label'=> 'Fecha','attr' => array('style' => 'margin-bottom:15px')))
           ->add('submit', SubmitType::class, array('label'=> 'Añadir Tarea','attr' => array('class'=>'btn btn-primary', 'style' => 'margin-bottom:15px')))
           ->getForm();
 
@@ -69,6 +69,7 @@ class TodoController extends Controller
                 'notice',
                 'Tarea Añadida'
               );
+
               return $this->redirectToRoute('todo_list');
           }
 
@@ -82,7 +83,61 @@ class TodoController extends Controller
      */
     public function editAction($id, Request $request)
     {
-        return $this->render('todo/edit.html.twig');
+      $todo = $this -> getDoctrine()
+        ->getRepository('AppBundle:Todo')
+        ->find($id);
+
+        $todo->setTitle($todo->getTitle());
+        $todo->setCategory($todo->getCategory());
+        $todo->setDescription($todo->getDescription());
+        $todo->setPriority($todo->getPriority());
+        $todo->setDate($todo->getDate());
+        $todo->setCreateDate($todo->getCreateDate());
+
+        $form = $this->createFormBuilder($todo)
+        ->add('title', TextType::class, array('label'=> 'Titulo','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+        ->add('category', TextType::class, array('label'=> 'Categoria','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+        ->add('description', TextareaType::class, array('label'=> 'Descripcion','attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+        ->add('priority', ChoiceType::class, array('label'=> 'Prioridad','choices'=>array('Baja'=>'Baja','Media'=>'Media','Alta'=>'Alta'),'attr' => array('class'=>'form-control', 'style' => 'margin-bottom:15px')))
+        ->add('date', DateTimeType::class, array('label'=> 'Fecha','attr' => array('style' => 'margin-bottom:15px')))
+        ->add('submit', SubmitType::class, array('label'=> 'Añadir Tarea','attr' => array('class'=>'btn btn-primary', 'style' => 'margin-bottom:15px')))
+        ->getForm();
+
+          $form->handleRequest($request);
+
+          if($form->isSubmitted() && $form->isValid()){
+            $title = $form['title']->getData();
+            $category = $form['category']->getData();
+            $description = $form['description']->getData();
+            $priority = $form['priority']->getData();
+            $date = $form['date']->getData();
+            $createDate = new\DateTime('now');
+
+            $em = $this->getDoctrine()->getManager();
+            $todo = $em->getRepository('AppBundle:Todo')->find($id);
+
+            $todo->setTitle($title);
+            $todo->setCategory($category);
+            $todo->setDescription($description);
+            $todo->setPriority($priority);
+            $todo->setDate($date);
+            $todo->setCreateDate($createDate);
+
+
+            $em->flush();
+
+            $this->addFlash(
+                'notice',
+                'Tarea Actualizada'
+              );
+
+              return $this->redirectToRoute('todo_list');
+
+            }
+        return $this->render('todo/edit.html.twig', array(
+          'todo' => $todo,
+          'form' => $form->createView()
+        ));
     }
 
     /**
@@ -90,7 +145,31 @@ class TodoController extends Controller
      */
     public function detailsAction($id)
     {
-        return $this->render('todo/details.html.twig');
+      $todo = $this -> getDoctrine()
+        ->getRepository('AppBundle:Todo')
+        ->find($id);
+        return $this->render('todo/details.html.twig', array(
+          'todo' => $todo
+        ));
+    }
+
+    /**
+     * @Route("/todo/delete/{id}", name="todo_delete")
+     */
+    public function deleteAction($id)
+    {
+      $em = $this->getDoctrine()->getManager();
+      $todo = $em->getRepository('AppBundle:Todo')->find($id);
+      $em->remove($todo);
+      $em->flush();
+
+      $this->addFlash(
+          'notice',
+          'Tarea Eliminada'
+        );
+
+        return $this->redirectToRoute('todo_list');
+
     }
 
 
