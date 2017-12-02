@@ -1,1 +1,27 @@
-TODO INDEX
+{% extends 'base.html.twig' %}
+{% block body %}
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Title</th>
+      <th>Date</th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr>
+      <th scope="row">1</th>
+      <td>Make HomeWork</td>
+      <td>27/11/1996</td>
+      <td>
+        <a href="/todo/edit/1" class="btn btn-primary">Edit</a>
+        <a href="/todo/delete/1" class="btn btn-danger">Delete</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
+

@@ -1,13 +1,52 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
-        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../../../favicon.ico">
+
+    <title>{% block title %}Welcome!{% endblock %}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+    {% block stylesheets %}{% endblock %}
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+
+  </head>
+
+  <body>
+
+    <nav class="navbar">
+      <div class="container">
+        <a class="navbar-brand" href="/todos">TodoList</a>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav nav">
+            <li class="active">
+              <a class="nav-link" href="/todos">HOME</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/todo/create">ADD TASK</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main role="main" class="container">
+
+      <div class="row">
+        <div class="clo-md-12">
+          {% block body %}{% endblock %}
+        </div>
+      </div>
+
+    </main><!-- /.container -->
+
+    {% block javascripts %}{% endblock %}
+
+
+  </body>
 </html>
